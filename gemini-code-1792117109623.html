@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizzería Primavera 1984 | Menú Online Junín, Mendoza</title>
+    <meta name="description" content="Menú online de Pizzería Primavera 1984 en Junín, Mendoza. Pedí online nuestras pizzas artesanales, lomos, parrilla y bebidas para llevar o con delivery.">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #D32F2F;
+            --primary-dark: #B71C1C;
+            --secondary: #F59E0B;
+            --accent: #EAB308;
+            --bg-warm: #FFFBEB;
+            --card-bg: #FFFFFF;
+            --text-dark: #27272A;
+            --text-muted: #71717A;
+            --wood-dark: #3F2E21;
+            --green-open: #16A34A;
+            --red-closed: #DC2626;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-warm); color: var(--text-dark); padding-bottom: 90px; padding-top: 45px; }
+        
+        /* BARRA ADMIN SUPERIOR */
+        .top-admin-bar { position: fixed; top: 0; left: 0; width: 100%; background: #2D1B10; color: white; display: flex; justify-content: space-between; align-items: center; padding: 8px 20px; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+        .top-admin-bar span { font-size: 0.8rem; letter-spacing: 1px; color: var(--secondary); font-weight: 600; }
+        .btn-admin-top { background: var(--primary); color: white; border: none; padding: 5px 14px; border-radius: 15px; font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+
+        /* SPLASH SCREEN (2.5 SEGUNDOS) */
+        #splash-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: linear-gradient(135deg, #2D1B10 0%, #1A0F0A 100%); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.8s ease, visibility 0.8s; color: white; text-align: center; padding: 20px; }
+        .splash-pizza-container { position: relative; width: 130px; height: 130px; margin-bottom: 20px; }
+        .splash-pizza { width: 100%; height: 100%; border-radius: 50%; border: 5px solid var(--secondary); background: radial-gradient(circle, #fca5a5 20%, #ef4444 80%); display: flex; justify-content: center; align-items: center; animation: spinPizza 2s linear infinite; box-shadow: 0 0 30px rgba(245, 158, 11, 0.4); }
+        @keyframes spinPizza { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .splash-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--secondary); letter-spacing: 2px; margin-bottom: 5px; text-transform: uppercase; }
+        .splash-subtitle { font-size: 0.9rem; color: #d1d5db; font-weight: 300; letter-spacing: 3px; }
+        
+        header { background: linear-gradient(rgba(45, 27, 16, 0.85), rgba(45, 27, 16, 0.92)), url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1000&q=80'); background-size: cover; background-position: center; color: white; padding: 30px 20px 20px 20px; text-align: center; border-bottom: 4px solid var(--secondary); position: relative; box-shadow: var(--shadow-md); }
+        .brand-title { font-family: 'Playfair Display', serif; font-size: 2.4rem; color: var(--secondary); font-weight: 700; text-transform: uppercase; line-height: 1.1; }
+        .brand-subtitle { font-size: 0.85rem; letter-spacing: 2px; color: #e5e7eb; margin-top: 4px; text-transform: uppercase; }
+        .location-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 0.82rem; color: #fef08a; text-decoration: underline; background: rgba(0,0,0,0.4); padding: 5px 12px; border-radius: 15px; }
+        .status-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 20px; font-size: 0.82rem; font-weight: 600; margin-top: 10px; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); border: 1px solid rgba(255, 255, 255, 0.15); }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .status-dot.open { background-color: var(--green-open); box-shadow: 0 0 10px var(--green-open); }
+        .status-dot.closed { background-color: var(--red-closed); box-shadow: 0 0 10px var(--red-closed); }
+        
+        .categories-nav { position: sticky; top: 45px; background: white; z-index: 99; display: flex; overflow-x: auto; padding: 12px 15px; gap: 10px; box-shadow: var(--shadow-sm); scrollbar-width: none; }
+        .categories-nav::-webkit-scrollbar { display: none; }
+        .cat-btn { background: #f4f4f5; color: var(--text-dark); border: none; padding: 8px 18px; border-radius: 25px; font-size: 0.85rem; font-weight: 500; white-space: nowrap; cursor: pointer; transition: all 0.2s ease; }
+        .cat-btn.active { background: var(--primary); color: white; box-shadow: 0 3px 10px rgba(211, 47, 47, 0.3); }
+        
+        .main-container { max-width: 900px; margin: 20px auto; padding: 0 15px; }
+        .section-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--wood-dark); margin: 25px 0 15px 0; padding-bottom: 5px; border-bottom: 2px solid var(--secondary); display: flex; align-items: center; gap: 10px; }
+        
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+        .product-card { background: var(--card-bg); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow-sm); transition: transform 0.2s ease, box-shadow 0.2s ease; display: flex; flex-direction: column; border: 1px solid #f3f4f6; }
+        .product-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+        .product-img { width: 100%; height: 160px; object-fit: cover; background: #f3f4f6; }
+        .product-info { padding: 14px; display: flex; flex-direction: column; flex-grow: 1; }
+        .product-name { font-size: 1.05rem; font-weight: 600; color: var(--text-dark); margin-bottom: 4px; }
+        .product-desc { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; flex-grow: 1; line-height: 1.3; }
+        
+        .price-box { background: #fef2f2; border-left: 3px solid var(--primary); padding: 8px 10px; border-radius: 6px; margin-bottom: 10px; }
+        .price-row { display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 600; }
+        .price-row.pickup { color: #15803d; margin-bottom: 2px; }
+        .price-row.delivery { color: var(--primary); }
+
+        .btn-add { width: 100%; background: var(--primary); color: white; border: none; padding: 10px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: background 0.2s ease; }
+        .btn-add:hover { background: var(--primary-dark); }
+        
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(3px); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        .modal-card { background: white; width: 100%; max-width: 440px; border-radius: 16px; padding: 22px; box-shadow: var(--shadow-lg); max-height: 90vh; overflow-y: auto; transform: scale(0.9); transition: transform 0.2s ease; }
+        .modal-overlay.active .modal-card { transform: scale(1); }
+        .modal-title { font-size: 1.2rem; font-weight: 700; color: var(--wood-dark); margin-bottom: 6px; text-align: center; }
+        .modal-desc { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px; text-align: center; }
+        
+        .portion-options { display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; }
+        .portion-btn { background: #FAF5FF; border: 2px solid var(--secondary); padding: 12px; border-radius: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 600; color: var(--wood-dark); transition: all 0.2s ease; }
+        .portion-btn:hover { background: var(--secondary); color: white; }
+        
+        .type-selector { display: flex; gap: 10px; margin-bottom: 15px; }
+        .type-btn { flex: 1; padding: 10px; border: 2px solid #e5e7eb; background: white; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .type-btn.active { border-color: var(--primary); background: #FEF2F2; color: var(--primary); }
+        
+        .cart-items-list { max-height: 160px; overflow-y: auto; border: 1px solid #e5e7eb; border-radius: 8px; padding: 8px 12px; margin-bottom: 15px; font-size: 0.85rem; }
+        .cart-item-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed #e5e7eb; }
+        .cart-item-row:last-child { border-bottom: none; }
+        .btn-close-modal { background: transparent; border: none; color: var(--text-muted); font-size: 0.85rem; cursor: pointer; text-decoration: underline; margin-top: 8px; width: 100%; }
+        
+        .cart-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: white; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; z-index: 500; flex-wrap: wrap; gap: 8px; }
+        .cart-info { display: flex; flex-direction: column; }
+        .cart-count { font-size: 0.75rem; color: var(--text-muted); }
+        .cart-total { font-size: 1.1rem; font-weight: 700; color: var(--primary); }
+        .cart-actions { display: flex; gap: 8px; align-items: center; }
+        .btn-checkout { background: var(--green-open); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 0.82rem; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(22, 163, 74, 0.3); }
+        .btn-checkout:disabled { background: #9ca3af; box-shadow: none; cursor: not-allowed; }
+        .btn-reserve { background: var(--secondary); color: var(--wood-dark); border: none; padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 0.82rem; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3); }
+
+        .legal-corner-btn { position: fixed; bottom: 12px; left: 12px; z-index: 600; background: rgba(255, 255, 255, 0.92); border: 1px solid #d1d5db; padding: 5px 12px; border-radius: 20px; font-size: 0.72rem; color: #4b5563; box-shadow: 0 2px 6px rgba(0,0,0,0.1); backdrop-filter: blur(4px); }
+        .legal-corner-btn a { color: #374151; text-decoration: none; font-weight: 600; }
+        .legal-corner-btn a:hover { text-decoration: underline; }
+
+        .admin-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; display: none; overflow-y: auto; padding: 20px; }
+        .admin-modal.active { display: block; }
+        .admin-container { max-width: 800px; margin: 30px auto; background: white; border-radius: 16px; padding: 25px; position: relative; }
+        .admin-tabs { display: flex; gap: 10px; border-bottom: 2px solid #e5e7eb; margin-bottom: 20px; }
+        .admin-tab { padding: 10px 20px; border: none; background: none; font-weight: 600; cursor: pointer; color: var(--text-muted); border-bottom: 3px solid transparent; }
+        .admin-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .admin-section { display: none; }
+        .admin-section.active { display: block; }
+        .admin-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.85rem; }
+        .admin-table th, .admin-table td { border: 1px solid #e5e7eb; padding: 8px 12px; text-align: left; }
+        .admin-table th { background: #f9fafb; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.85rem; }
+        .btn-admin-save { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+        .close-admin { position: absolute; top: 20px; right: 20px; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
+        .toggle-box { background: #FFFBEB; border: 2px solid var(--secondary); padding: 15px; border-radius: 10px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; }
+    </style>
+</head>
+<body>
+    <!-- PANTALLA DE CARGA (SPLASH SCREEN - 2.5 SEGUNDOS) -->
+    <div id="splash-screen">
+        <div class="splash-pizza-container">
+            <div class="splash-pizza"><i class="fa-solid fa-pizza-slice" style="font-size: 2.8rem; color: white;"></i></div>
+        </div>
+        <div class="splash-title">Primavera</div>
+        <div class="splash-subtitle">PIZZERÍA 1984</div>
+    </div>
+
+    <div class="top-admin-bar">
+        <span><i class="fa-solid fa-pizza-slice"></i> PRIMAVERA 1984</span>
+        <button class="btn-admin-top" onclick="openAdminLogin()"><i class="fa-solid fa-lock"></i> Admin</button>
+    </div>
+
+    <header>
+        <div class="brand-title">Pizzería Primavera</div>
+        <div class="brand-subtitle">JUNÍN, MENDOZA • DESDE 1984</div>
+        <div><a href="https://maps.google.com/?q=Luis+Pasteur+y+Primavera+Junin+Mendoza" target="_blank" class="location-link"><i class="fa-solid fa-location-dot"></i> Luis Pasteur y Primavera, Junín, Mendoza (Ver en Mapa)</a></div>
+        <div class="status-badge"><div class="status-dot" id="statusDot"></div><span id="statusText">Comprobando horario...</span></div>
+    </header>
+
+    <nav class="categories-nav" id="categoriesNav"></nav>
+    <main class="main-container" id="mainContainer"></main>
+
+    <div class="cart-bar">
+        <div class="cart-info">
+            <span class="cart-count" id="cartCount">0 productos</span>
+            <span class="cart-total" id="cartTotal">$0</span>
+        </div>
+        <div class="cart-actions">
+            <button class="btn-checkout" id="btnCheckout" onclick="openCheckoutModal()"><i class="fa-solid fa-basket-shopping"></i> Pedir</button>
+            <button class="btn-reserve" onclick="openReservationModal()"><i class="fa-solid fa-chair"></i> Reservar Mesa</button>
+        </div>
+    </div>
+
+    <div class="legal-corner-btn">
+        <a href="javascript:void(0)" onclick="openLegalModal()">Términos y Privacidad</a>
+    </div>
+
+    <!-- MODAL PORCIÓN -->
+    <div class="modal-overlay" id="portionModal">
+        <div class="modal-card">
+            <div class="modal-title" id="modalProductName">Nombre Producto</div>
+            <div class="modal-desc">Seleccioná el tamaño:</div>
+            <div class="portion-options">
+                <button class="portion-btn" onclick="selectPortion('Media')"><span id="labelHalf">Media Pizza</span><span id="priceHalf">$0</span></button>
+                <button class="portion-btn" onclick="selectPortion('Entera')"><span id="labelFull">Pizza Entera</span><span id="priceFull">$0</span></button>
+            </div>
+            <button class="btn-close-modal" onclick="closePortionModal()">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- MODAL RESERVAS -->
+    <div class="modal-overlay" id="reservationModal">
+        <div class="modal-card">
+            <div class="modal-title">Reserva tu Mesa</div>
+            <div class="modal-desc">Ingresá los datos para tu reserva en Pizzería Primavera:</div>
+            <form id="reservationForm" onsubmit="submitReservation(event)">
+                <div class="form-group"><label>Cantidad de Personas *</label><input type="number" id="resPersons" min="1" value="2" required></div>
+                <div class="form-group"><label>Nombre y Apellido *</label><input type="text" id="resName" required placeholder="Ej: Juan Pérez"></div>
+                <div class="form-group"><label>Teléfono *</label><input type="tel" id="resPhone" required placeholder="Ej: 2634123456"></div>
+                <button type="submit" class="btn-add" style="background:var(--green-open); padding:12px; margin-top:10px;"><i class="fa-brands fa-whatsapp"></i> Enviar Reserva por WhatsApp</button>
+            </form>
+            <button class="btn-close-modal" onclick="closeReservationModal()">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- MODAL CHECKOUT / PEDIDO -->
+    <div class="modal-overlay" id="checkoutModal">
+        <div class="modal-card">
+            <div class="modal-title">Finalizar Pedido</div>
+            <div class="modal-desc">Elegí la modalidad de entrega:</div>
+            <div class="type-selector">
+                <button class="type-btn active" id="btnDelivery" onclick="setOrderType('delivery')"><i class="fa-solid fa-motorcycle"></i> Delivery</button>
+                <button class="type-btn" id="btnPickup" onclick="setOrderType('pickup')"><i class="fa-solid fa-store"></i> Para llevar</button>
+            </div>
+            <div class="cart-items-list" id="checkoutList"></div>
+            <form id="checkoutForm" onsubmit="submitOrder(event)">
+                <div class="form-group"><label>Nombre y Apellido *</label><input type="text" id="custName" required placeholder="Ej: Juan Pérez"></div>
+                <div class="form-group"><label>Teléfono de Contacto *</label><input type="tel" id="custPhone" required placeholder="Ej: 2634123456"></div>
+                <div class="form-group" id="addressGroup"><label>Dirección de Envío *</label><input type="text" id="custAddress" required placeholder="Calle, Número, Barrio"></div>
+                <div class="form-group">
+                    <label>Forma de Pago *</label>
+                    <select id="custPayment" required style="width:100%; padding:8px; border-radius:6px; border:1px solid #d1d5db;">
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Transferencia / Mercado Pago">Transferencia / Mercado Pago</option>
+                        <option value="Tarjeta de Débito / Crédito">Tarjeta de Débito / Crédito</option>
+                    </select>
+                </div>
+                <div style="font-weight:700; font-size:1.1rem; color:var(--primary); text-align:right; margin-bottom:15px;" id="checkoutTotal">Total: $0</div>
+                <button type="submit" class="btn-add" style="background:var(--green-open); padding:12px;"><i class="fa-brands fa-whatsapp"></i> Enviar Pedido por WhatsApp</button>
+            </form>
+            <button class="btn-close-modal" onclick="closeCheckoutModal()">Volver al menú</button>
+        </div>
+    </div>
+
+    <!-- MODAL TÉRMINOS Y PRIVACIDAD -->
+    <div class="modal-overlay" id="legalModal">
+        <div class="modal-card">
+            <div class="modal-title" style="color:var(--primary);">📜 Términos y Privacidad</div>
+            <div style="font-size:0.82rem; color:#444; line-height:1.5; margin-bottom:15px; max-height: 60vh; overflow-y: auto;">
+                <h4 style="color:var(--wood-dark); margin-top:5px;">1. Términos y Condiciones</h4>
+                <p>• Los pedidos realizados a través de la plataforma web están sujetos a disponibilidad de cocina en Pizzería Primavera 1984.<br>
+                • Los precios se diferencian claramente entre la modalidad <strong>Para llevar</strong> y la modalidad <strong>Delivery</strong>.<br>
+                • Los tiempos de entrega son estimados y se reconfirmarán mediante WhatsApp al enviar el pedido.</p>
+
+                <h4 style="color:var(--wood-dark); margin-top:12px;">2. Política de Privacidad</h4>
+                <p>• Los datos personales recopilados (nombre, teléfono y dirección) son utilizados exclusivamente para la gestión y entrega de los pedidos o reservas de mesa.<br>
+                • No compartimos información con terceros ni almacenamos datos bancarios confidenciales.</p>
+            </div>
+            <button class="btn-add" style="background:#222;" onclick="closeLegalModal()">Cerrar / Entendido</button>
+        </div>
+    </div>
+
+    <!-- PANEL ADMIN -->
+    <div class="admin-modal" id="adminModal">
+        <div class="admin-container">
+            <span class="close-admin" onclick="closeAdmin()">&times;</span>
+            <h2 style="font-family: 'Playfair Display', serif; margin-bottom: 15px;">Panel de Administración</h2>
+            <div class="toggle-box">
+                <div><strong>Control de Disponibilidad</strong><div style="font-size:0.75rem; color:var(--text-muted);">Gestioná el estado del local</div></div>
+                <select id="opModeSelect" onchange="changeOpMode(this)" style="padding: 8px 12px; border-radius: 6px; font-weight:600; border: 2px solid var(--secondary); background: white;">
+                    <option value="auto">Automático (9:00 a 23:00)</option>
+                    <option value="force_open">Desbloquear (Forzar Abierto 24hs)</option>
+                    <option value="force_closed">Bloquear (Forzar Cerrado)</option>
+                </select>
+            </div>
+            <div class="admin-tabs">
+                <button class="admin-tab active" onclick="switchAdminTab('menu')">Editar Carta</button>
+                <button class="admin-tab" onclick="switchAdminTab('orders')">Registro de Pedidos</button>
+            </div>
+            <div class="admin-section active" id="secMenu">
+                <h4 style="margin-bottom: 10px;">Añadir / Editar Producto (Precios Para llevar y Delivery)</h4>
+                <form id="productForm" onsubmit="saveProduct(event)">
+                    <input type="hidden" id="prodId">
+                    <div class="form-group"><label>Nombre del Producto</label><input type="text" id="prodName" required></div>
+                    <div class="form-group"><label>Categoría</label>
+                        <select id="prodCategory" required>
+                            <option value="Pizzas">Pizzas</option>
+                            <option value="Minutas">Minutas</option>
+                            <option value="Adicionales">Adicionales</option>
+                            <option value="Ensaladas">Ensaladas</option>
+                            <option value="Postres">Postres</option>
+                            <option value="Vinos">Vinos</option>
+                            <option value="Gaseosas">Gaseosas</option>
+                            <option value="Cervezas">Cervezas</option>
+                            <option value="Aperitivos">Aperitivos</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Descripción / Ingredientes</label><textarea id="prodDesc" rows="2"></textarea></div>
+                    <div style="display: flex; gap: 10px;">
+                        <div class="form-group" style="flex:1;"><label>Precio Para llevar (Entera) ($)</label><input type="number" id="prodPriceLocal" required></div>
+                        <div class="form-group" style="flex:1;"><label>Precio Delivery (Entera) ($)</label><input type="number" id="prodPriceDelivery" required></div>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <div class="form-group" style="flex:1;"><label>Precio Para llevar (Media) ($)</label><input type="number" id="prodPriceHalfLocal" value="0"></div>
+                        <div class="form-group" style="flex:1;"><label>Precio Delivery (Media) ($)</label><input type="number" id="prodPriceHalfDelivery" value="0"></div>
+                    </div>
+                    <div class="form-group"><label>URL de Imagen</label><input type="url" id="prodImg"></div>
+                    <button type="submit" class="btn-admin-save">Guardar Producto</button>
+                </form>
+                <h4 style="margin-top: 25px; margin-bottom: 10px;">Productos Actuales</h4>
+                <div style="max-height: 250px; overflow-y: auto;">
+                    <table class="admin-table">
+                        <thead><tr><th>Nombre</th><th>Cat.</th><th>Para llevar</th><th>Delivery</th><th>Acción</th></tr></thead>
+                        <tbody id="adminProductsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="admin-section" id="secOrders">
+                <h4 style="margin-bottom: 10px;">Historial de Pedidos</h4>
+                <div style="max-height: 400px; overflow-y: auto;">
+                    <table class="admin-table">
+                        <thead><tr><th>Orden #</th><th>Fecha/Hora</th><th>Cliente</th><th>Tipo</th><th>Detalle</th><th>Total</th></tr></thead>
+                        <tbody id="adminOrdersTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const defaultMenu = [
+            { id: 1, name: "Común", category: "Pizzas", desc: "Queso y aceitunas", priceLocal: 14000, priceDelivery: 19000, priceHalfLocal: 10000, priceHalfDelivery: 10000, img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=500&q=80" },
+            { id: 2, name: "Doble Quesos", category: "Pizzas", desc: "Doble queso y aceitunas", priceLocal: 18000, priceDelivery: 23000, priceHalfLocal: 0, priceHalfDelivery: 12000, img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=500&q=80" },
+            { id: 3, name: "Especial", category: "Pizzas", desc: "Queso, jamón cocido y aceitunas", priceLocal: 19000, priceDelivery: 24000, priceHalfLocal: 0, priceHalfDelivery: 13000, img: "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=500&q=80" },
+            { id: 4, name: "Doble Especial", category: "Pizzas", desc: "Queso, jamón y aceitunas", priceLocal: 22000, priceDelivery: 28000, priceHalfLocal: 0, priceHalfDelivery: 14000, img: "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=500&q=80" },
+            { id: 5, name: "Primavera 1", category: "Pizzas", desc: "Queso, jamón, anchoas, morrones y aceitunas", priceLocal: 23000, priceDelivery: 28000, priceHalfLocal: 0, priceHalfDelivery: 15000, img: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=500&q=80" },
+            { id: 6, name: "Primavera 2", category: "Pizzas", desc: "Queso, jamón, morrones y palmitos", priceLocal: 23000, priceDelivery: 31000, priceHalfLocal: 0, priceHalfDelivery: 16000, img: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=500&q=80" },
+            { id: 7, name: "Primavera 3", category: "Pizzas", desc: "Queso, rúcula y jamón crudo", priceLocal: 24000, priceDelivery: 27000, priceHalfLocal: 0, priceHalfDelivery: 14000, img: "https://images.unsplash.com/photo-1590947132387-155cc02f3212?auto=format&fit=crop&w=500&q=80" },
+            { id: 8, name: "Doble c/ Huevo", category: "Pizzas", desc: "Doble queso, huevo duro y aceitunas", priceLocal: 20000, priceDelivery: 27000, priceHalfLocal: 0, priceHalfDelivery: 14000, img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=500&q=80" },
+            { id: 9, name: "Calabresa", category: "Pizzas", desc: "Queso, rodajas de calabresa y aceitunas", priceLocal: 20000, priceDelivery: 27000, priceHalfLocal: 0, priceHalfDelivery: 14000, img: "https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=500&q=80" },
+            { id: 10, name: "Fugazza", category: "Pizzas", desc: "Queso, cebollas en oliva y aceitunas negras", priceLocal: 20000, priceDelivery: 31000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?auto=format&fit=crop&w=500&q=80" },
+            { id: 11, name: "Tropical", category: "Pizzas", desc: "Queso, jamón crudo, ananá, palmitos y salsa golf", priceLocal: 24000, priceDelivery: 31000, priceHalfLocal: 0, priceHalfDelivery: 16000, img: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=500&q=80" },
+            { id: 12, name: "Cuatro Quesos", category: "Pizzas", desc: "Queso barra, mantecoso, roquefort y muzarella", priceLocal: 24000, priceDelivery: 31000, priceHalfLocal: 0, priceHalfDelivery: 16000, img: "https://images.unsplash.com/photo-1573821663912-569905455b1c?auto=format&fit=crop&w=500&q=80" },
+            { id: 13, name: "Roquefort", category: "Pizzas", desc: "Queso roquefort y aceitunas", priceLocal: 20000, priceDelivery: 27000, priceHalfLocal: 0, priceHalfDelivery: 14000, img: "https://images.unsplash.com/photo-1573821663912-569905455b1c?auto=format&fit=crop&w=500&q=80" },
+            { id: 14, name: "Especial con Roquefort", category: "Pizzas", desc: "Queso, jamón cocido y roquefort", priceLocal: 21000, priceDelivery: 27000, priceHalfLocal: 0, priceHalfDelivery: 14000, img: "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=500&q=80" },
+            { id: 15, name: "Napolitana", category: "Pizzas", desc: "Queso, rodajas de tomate y orégano", priceLocal: 20000, priceDelivery: 27000, priceHalfLocal: 0, priceHalfDelivery: 14000, img: "https://images.unsplash.com/photo-1594007654729-407eedc4be65?auto=format&fit=crop&w=500&q=80" },
+            
+            // MINUTAS (Con Lomo con Pan Francés y Pan Árabe)
+            { id: 16, name: "Lomo Grande (Pan Árabe)", category: "Minutas", desc: "Pan árabe, carne, tomate, lechuga, jamón, queso y huevo", priceLocal: 26000, priceDelivery: 26000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1521305916504-4a1121188589?auto=format&fit=crop&w=500&q=80" },
+            { id: 161, name: "Lomo con Pan Francés", category: "Minutas", desc: "Pan francés crujiente, carne de lomo seleccionada, jamón, queso, tomate, lechuga y huevo", priceLocal: 27000, priceDelivery: 27000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1521305916504-4a1121188589?auto=format&fit=crop&w=500&q=80" },
+            { id: 17, name: "Lomo al Plato", category: "Minutas", desc: "Carne de lomo con guarnición", priceLocal: 27000, priceDelivery: 27000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=500&q=80" },
+            { id: 18, name: "Tostado Simple", category: "Minutas", desc: "Jamón y queso", priceLocal: 9000, priceDelivery: 9000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=500&q=80" },
+            { id: 19, name: "Tostado Triple", category: "Minutas", desc: "Doble jamón y queso", priceLocal: 11000, priceDelivery: 11000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=500&q=80" },
+
+            // ADICIONALES
+            { id: 20, name: "Aliño", category: "Adicionales", desc: "Porción", priceLocal: 2500, priceDelivery: 2500, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=500&q=80" },
+            { id: 21, name: "Morrones", category: "Adicionales", desc: "Porción", priceLocal: 3000, priceDelivery: 3000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?auto=format&fit=crop&w=500&q=80" },
+            { id: 22, name: "Anchoas", category: "Adicionales", desc: "Porción", priceLocal: 5000, priceDelivery: 5000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=500&q=80" },
+            { id: 23, name: "Palmitos", category: "Adicionales", desc: "Porción", priceLocal: 5000, priceDelivery: 5000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=500&q=80" },
+            { id: 24, name: "Ananá", category: "Adicionales", desc: "Porción", priceLocal: 2000, priceDelivery: 2000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1550258987-190a2d41a8ba?auto=format&fit=crop&w=500&q=80" },
+            { id: 25, name: "Huevo duro / frito", category: "Adicionales", desc: "Unidad", priceLocal: 3000, priceDelivery: 3000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=500&q=80" },
+            { id: 26, name: "Fiambre", category: "Adicionales", desc: "Porción", priceLocal: 4000, priceDelivery: 4000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=500&q=80" },
+            { id: 27, name: "Jamón Crudo", category: "Adicionales", desc: "Porción", priceLocal: 3500, priceDelivery: 3500, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=500&q=80" },
+
+            // ENSALADAS
+            { id: 29, name: "Papas Fritas Grandes", category: "Ensaladas", desc: "Porción abundante", priceLocal: 9000, priceDelivery: 9000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=500&q=80" },
+            { id: 30, name: "Mixta", category: "Ensaladas", desc: "Lechuga, tomate y cebolla", priceLocal: 8000, priceDelivery: 8000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=500&q=80" },
+
+            // POSTRES
+            { id: 31, name: "Flan Casero", category: "Postres", desc: "Tradicional", priceLocal: 4500, priceDelivery: 4500, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1528975604071-b4dc52a2d18c?auto=format&fit=crop&w=500&q=80" },
+            { id: 32, name: "Copa Helada", category: "Postres", desc: "Bocha de helado", priceLocal: 6000, priceDelivery: 6000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=500&q=80" },
+            { id: 33, name: "Ensalada de Frutas", category: "Postres", desc: "Frutas de estación", priceLocal: 5000, priceDelivery: 5000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?auto=format&fit=crop&w=500&q=80" },
+            { id: 34, name: "Mixto", category: "Postres", desc: "Postre variado", priceLocal: 4500, priceDelivery: 4500, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1528975604071-b4dc52a2d18c?auto=format&fit=crop&w=500&q=80" },
+            { id: 35, name: "Almendrado", category: "Postres", desc: "Postre helado", priceLocal: 4500, priceDelivery: 4500, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=500&q=80" },
+            { id: 36, name: "Suizo", category: "Postres", desc: "Postre helado", priceLocal: 4500, priceDelivery: 4500, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=500&q=80" },
+            { id: 37, name: "Escocés", category: "Postres", desc: "Postre helado", priceLocal: 4500, priceDelivery: 4500, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=500&q=80" },
+            { id: 38, name: "Macedonia (Ensalada con Helado)", category: "Postres", desc: "Fruta con helado", priceLocal: 5000, priceDelivery: 5000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?auto=format&fit=crop&w=500&q=80" },
+            { id: 39, name: "Menú Celíaco (Adicional)", category: "Postres", desc: "Apto celíacos", priceLocal: 4500, priceDelivery: 4500, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=500&q=80" },
+
+            // VINOS
+            { id: 40, name: "Santa Julia Malbec", category: "Vinos", desc: "Vino tinto 750ml", priceLocal: 5000, priceDelivery: 5000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=500&q=80" },
+            { id: 41, name: "Alambrado", category: "Vinos", desc: "Vino fino 750ml", priceLocal: 12000, priceDelivery: 12000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=500&q=80" },
+
+            // GASEOSAS
+            { id: 42, name: "Pepsi, Mirinda, 7Up 1,500 ml", category: "Gaseosas", desc: "Botella 1.5L", priceLocal: 8500, priceDelivery: 8500, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=500&q=80" },
+            { id: 43, name: "Coca-Cola, Fanta, Sprite 1,250 ml", category: "Gaseosas", desc: "Botella 1.25L", priceLocal: 8000, priceDelivery: 8000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=500&q=80" },
+            { id: 44, name: "Coca-Cola, Fanta, Sprite 1,500 ml", category: "Gaseosas", desc: "Botella 1.5L", priceLocal: 9500, priceDelivery: 9500, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=500&q=80" },
+            { id: 45, name: "Coca-Cola Zero / Light 1,250 ml", category: "Gaseosas", desc: "Botella 1.25L", priceLocal: 9000, priceDelivery: 9000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=500&q=80" },
+            { id: 46, name: "Saborizadas 1,500 ml", category: "Gaseosas", desc: "Botella 1.5L", priceLocal: 7000, priceDelivery: 7000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=500&q=80" },
+            { id: 47, name: "Agua o Soda 500 ml", category: "Gaseosas", desc: "Botella 500ml", priceLocal: 3500, priceDelivery: 3500, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1548839140-29a749e1bc4e?auto=format&fit=crop&w=500&q=80" },
+            { id: 48, name: "Gaseosa 350 ml", category: "Gaseosas", desc: "Lata / Individual", priceLocal: 4000, priceDelivery: 4000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=500&q=80" },
+            { id: 49, name: "Gaseosa 500 ml", category: "Gaseosas", desc: "Individual", priceLocal: 4500, priceDelivery: 4500, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=500&q=80" },
+            { id: 50, name: "Gaseosa Zero 350 ml", category: "Gaseosas", desc: "Lata / Individual", priceLocal: 4000, priceDelivery: 4000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=500&q=80" },
+
+            // CERVEZAS
+            { id: 51, name: "Stella Artois", category: "Cervezas", desc: "Litro", priceLocal: 11000, priceDelivery: 11000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1608270105375-7ec53a39e80c?auto=format&fit=crop&w=500&q=80" },
+            { id: 52, name: "Quilmes", category: "Cervezas", desc: "Litro", priceLocal: 9000, priceDelivery: 9000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1608270105375-7ec53a39e80c?auto=format&fit=crop&w=500&q=80" },
+            { id: 53, name: "Lata de Cerveza", category: "Cervezas", desc: "Unidad", priceLocal: 5000, priceDelivery: 5000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1608270105375-7ec53a39e80c?auto=format&fit=crop&w=500&q=80" },
+            { id: 54, name: "Quilmes Negra", category: "Cervezas", desc: "Litro", priceLocal: 11000, priceDelivery: 11000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1608270105375-7ec53a39e80c?auto=format&fit=crop&w=500&q=80" },
+
+            // APERITIVOS
+            { id: 55, name: "Fernet Preparado", category: "Aperitivos", desc: "Vaso trago", priceLocal: 7000, priceDelivery: 7000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=500&q=80" },
+            { id: 56, name: "Fernet Medida", category: "Aperitivos", desc: "Medida sola", priceLocal: 9000, priceDelivery: 9000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=500&q=80" },
+            { id: 57, name: "Fernet Jarra", category: "Aperitivos", desc: "Jarra para compartir", priceLocal: 16000, priceDelivery: 16000, priceHalfLocal: 0, priceHalfDelivery: 0, img: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=500&q=80" }
+        ];
+
+        let products = defaultMenu;
+        try {
+            const savedMenu = localStorage.getItem('primavera_menu_v7');
+            if (savedMenu) products = JSON.parse(savedMenu);
+        } catch(e) { products = defaultMenu; }
+
+        let cart = [];
+        let selectedProductForPortion = null;
+        let isSystemOpen = true;
+        let opMode = localStorage.getItem('primavera_op_mode') || 'auto';
+        let orderType = 'delivery';
+        let orderHistory = JSON.parse(localStorage.getItem('primavera_orders')) || [];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            // Animación de inicio de 2.5 segundos exactos
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                if (splash) {
+                    splash.style.opacity = '0';
+                    setTimeout(() => splash.style.visibility = 'hidden', 800);
+                }
+            }, 2500);
+
+            checkBusinessHours();
+            renderCategories();
+            renderProducts();
+            updateCartUI();
+        });
+
+        function checkBusinessHours() {
+            const dot = document.getElementById('statusDot');
+            const text = document.getElementById('statusText');
+            const checkoutBtn = document.getElementById('btnCheckout');
+            
+            if (opMode === 'force_closed') {
+                isSystemOpen = false;
+                dot.className = "status-dot closed";
+                text.textContent = "CERRADO";
+                checkoutBtn.disabled = true;
+            } else {
+                isSystemOpen = true;
+                dot.className = "status-dot open";
+                text.textContent = "ABIERTO AHORA";
+                checkoutBtn.disabled = false;
+            }
+        }
+
+        function changeOpMode(select) {
+            opMode = select.value;
+            localStorage.setItem('primavera_op_mode', opMode);
+            checkBusinessHours();
+        }
+
+        function getNextOrderNumber() {
+            let orderData = JSON.parse(localStorage.getItem('primavera_daily_orders')) || { count: 0 };
+            orderData.count++;
+            localStorage.setItem('primavera_daily_orders', JSON.stringify(orderData));
+            return `#${String(orderData.count).padStart(3, '0')}`;
+        }
+
+        function renderCategories() {
+            const categories = ["Todos", ...new Set(products.map(p => p.category))];
+            const nav = document.getElementById('categoriesNav');
+            nav.innerHTML = categories.map((cat, idx) => `<button class="cat-btn ${idx === 0 ? 'active' : ''}" onclick="filterCategory('${cat}', this)">${cat}</button>`).join('');
+        }
+
+        function filterCategory(category, btn) {
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderProducts(category);
+        }
+
+        function renderProducts(categoryFilter = "Todos") {
+            const container = document.getElementById('mainContainer');
+            const filtered = categoryFilter === "Todos" ? products : products.filter(p => p.category === categoryFilter);
+            const categoriesToDisplay = [...new Set(filtered.map(p => p.category))];
+
+            container.innerHTML = categoriesToDisplay.map(cat => {
+                const catProducts = filtered.filter(p => p.category === cat);
+                return `
+                    <div class="section-title"><i class="fa-solid fa-utensils"></i> ${cat}</div>
+                    <div class="products-grid">
+                        ${catProducts.map(p => {
+                            const pLocal = p.priceLocal || p.price || 0;
+                            const pDelivery = p.priceDelivery || p.price || 0;
+                            return `
+                            <div class="product-card">
+                                <img src="${p.img}" class="product-img" alt="${p.name}" loading="lazy">
+                                <div class="product-info">
+                                    <div class="product-name">${p.name}</div>
+                                    <div class="product-desc">${p.desc}</div>
+                                    <div class="price-box">
+                                        <div class="price-row pickup"><span>• Para llevar:</span><span>$${pLocal.toLocaleString()}</span></div> <div class="price-row delivery"><span>• Delivery:</span><span>$${pDelivery.toLocaleString()}</span></div>
+                                    </div>
+                                    <button class="btn-add" onclick="handleAddToCart(${p.id})">
+                                        <i class="fa-solid fa-cart-plus"></i> ${((p.priceHalfLocal > 0) || (p.priceHalfDelivery > 0)) ? 'Elegir Tamaño' : 'Agregar'}
+                                    </button>
+                                </div>
+                            </div>`;
+                        }).join('')}
+                    </div>`;
+            }).join('');
+        }
+
+        function handleAddToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            const hasHalf = (product.priceHalfLocal > 0) || (product.priceHalfDelivery > 0);
+            if (hasHalf) {
+                selectedProductForPortion = product;
+                document.getElementById('modalProductName').textContent = product.name;
+                const isPizza = product.category === 'Pizzas';
+                document.getElementById('labelHalf').textContent = isPizza ? 'Media Pizza' : 'Porción / Opción';
+                document.getElementById('labelFull').textContent = isPizza ? 'Pizza Entera' : 'Completo / Grande';
+                
+                const pLocalHalf = product.priceHalfLocal || product.priceHalfDelivery || 0;
+                const pDelivHalf = product.priceHalfDelivery || product.priceHalfLocal || 0;
+                const pLocalFull = product.priceLocal || product.price || 0;
+                const pDelivFull = product.priceDelivery || product.price || 0;
+
+                document.getElementById('priceHalf').textContent = `$${(orderType === 'delivery' ? pDelivHalf : pLocalHalf).toLocaleString()}`;
+                document.getElementById('priceFull').textContent = `$${(orderType === 'delivery' ? pDelivFull : pLocalFull).toLocaleString()}`;
+                document.getElementById('portionModal').classList.add('active');
+            } else {
+                const finalPrice = orderType === 'delivery' ? (product.priceDelivery || product.price || 0) : (product.priceLocal || product.price || 0);
+                addToCart(product.name, finalPrice, 'Entera');
+            }
+        }
+
+        function selectPortion(type) {
+            if (!selectedProductForPortion) return;
+            const p = selectedProductForPortion;
+            let finalPrice = (type === 'Media') ? 
+                (orderType === 'delivery' ? (p.priceHalfDelivery || p.priceHalfLocal || 0) : (p.priceHalfLocal || p.priceHalfDelivery || 0)) :
+                (orderType === 'delivery' ? (p.priceDelivery || p.price || 0) : (p.priceLocal || p.price || 0));
+            addToCart(`${p.name} (${type === 'Media' ? 'Media' : 'Entera'})`, finalPrice, type);
+            closePortionModal();
+        }
+
+        function closePortionModal() {
+            document.getElementById('portionModal').classList.remove('active');
+            selectedProductForPortion = null;
+        }
+
+        function addToCart(name, price, portion) {
+            const existing = cart.find(item => item.name === name && item.price === price);
+            if (existing) existing.qty++; else cart.push({ name, price, qty: 1, portion });
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const totalCount = cart.reduce((acc, item) => acc + item.qty, 0);
+            const totalPrice = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+            document.getElementById('cartCount').textContent = `${totalCount} producto${totalCount !== 1 ? 's' : ''}`;
+            document.getElementById('cartTotal').textContent = `$${totalPrice.toLocaleString()}`;
+        }
+
+        function openCheckoutModal() {
+            if (cart.length === 0) { alert("El carrito está vacío."); return; }
+            const listContainer = document.getElementById('checkoutList');
+            listContainer.innerHTML = cart.map(item => `<div class="cart-item-row"><span>${item.qty}x ${item.name}</span><strong>$${(item.price * item.qty).toLocaleString()}</strong></div>`).join('');
+            document.getElementById('checkoutTotal').textContent = `Total: $${cart.reduce((acc, item) => acc + (item.price * item.qty), 0).toLocaleString()}`;
+            document.getElementById('checkoutModal').classList.add('active');
+        }
+
+        function closeCheckoutModal() { document.getElementById('checkoutModal').classList.remove('active'); }
+
+        function setOrderType(type) {
+            orderType = type;
+            document.getElementById('btnDelivery').classList.toggle('active', type === 'delivery');
+            document.getElementById('btnPickup').classList.toggle('active', type === 'pickup');
+            document.getElementById('addressGroup').style.display = type === 'delivery' ? 'block' : 'none';
+            document.getElementById('custAddress').required = type === 'delivery';
+
+            cart = cart.map(item => {
+                const baseNameClean = item.name.split(' (')[0];
+                const foundProd = products.find(p => p.name === baseNameClean);
+                if (foundProd) {
+                    const isHalf = item.name.includes('(Media)');
+                    let newPrice = isHalf ? 
+                        (type === 'delivery' ? (foundProd.priceHalfDelivery || foundProd.priceHalfLocal || item.price) : (foundProd.priceHalfLocal || foundProd.priceHalfDelivery || item.price)) :
+                        (type === 'delivery' ? (foundProd.priceDelivery || foundProd.price || item.price) : (foundProd.priceLocal || foundProd.price || item.price));
+                    return { ...item, price: newPrice };
+                }
+                return item;
+            });
+            updateCartUI();
+            if(document.getElementById('checkoutModal').classList.contains('active')) openCheckoutModal();
+        }
+
+        function submitOrder(e) {
+            e.preventDefault();
+            const name = document.getElementById('custName').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+            const address = document.getElementById('custAddress').value.trim();
+            const payment = document.getElementById('custPayment').value;
+            const orderNum = getNextOrderNumber();
+            const totalPrice = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+            
+            const detailText = cart.map(item => `  • ${item.qty}x ${item.name} ($${(item.price * item.qty).toLocaleString()})`).join('\n');
+            orderHistory.push({ orderNum, date: new Date().toLocaleString("es-AR"), client: name, phone, type: orderType, detail: cart.map(i=>`${i.qty}x ${i.name}`).join(', '), total: totalPrice });
+            localStorage.setItem('primavera_orders', JSON.stringify(orderHistory));
+
+            let message = `¡Hola! Pedido en *Pizzería Primavera 1984*:\n\n📌 *ORDEN:* ${orderNum}\n👤 *Cliente:* ${name}\n📞 *Teléfono:* ${phone}\n🛵 *Modalidad:* ${orderType === 'delivery' ? 'Delivery' : 'Para llevar'}\n${orderType === 'delivery' ? '📍 *Dirección:* ' + address + '\n' : ''}💳 *Pago:* ${payment}\n\n🍕 *Detalle:*\n${detailText}\n\n💰 *TOTAL:* $${totalPrice.toLocaleString()}`;
+            window.open(`https://wa.me/542634244705?text=${encodeURIComponent(message)}`, '_blank');
+            cart = [];
+            updateCartUI();
+            closeCheckoutModal();
+        }
+
+        function openReservationModal() { document.getElementById('reservationModal').classList.add('active'); }
+        function closeReservationModal() { document.getElementById('reservationModal').classList.remove('active'); }
+        function submitReservation(e) {
+            e.preventDefault();
+            const persons = document.getElementById('resPersons').value;
+            const name = document.getElementById('resName').value;
+            const phone = document.getElementById('resPhone').value;
+            window.open(`https://wa.me/542634244705?text=${encodeURIComponent(`Reserva mesa para ${persons} personas a nombre de ${name} (Tel:${phone})`)}`, '_blank');
+            closeReservationModal();
+        }
+
+        function openLegalModal() { document.getElementById('legalModal').classList.add('active'); }
+        function closeLegalModal() { document.getElementById('legalModal').classList.remove('active'); }
+
+        function openAdminLogin() {
+            if (prompt("Clave de administración:") === "5087777") {
+                document.getElementById('adminModal').classList.add('active');
+                renderAdminProducts();
+                renderAdminOrders();
+            } else { alert("Clave incorrecta."); }
+        }
+        function closeAdmin() { document.getElementById('adminModal').classList.remove('active'); }
+        function switchAdminTab(tab) {
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.admin-tab')[tab === 'menu' ? 0 : 1].classList.add('active');
+            document.getElementById(tab === 'menu' ? 'secMenu' : 'secOrders').classList.add('active');
+        }
+        function saveProduct(e) {
+            e.preventDefault();
+            const id = document.getElementById('prodId').value;
+            const pData = {
+                id: id ? parseInt(id) : (products.length ? Math.max(...products.map(p => p.id)) + 1 : 1),
+                name: document.getElementById('prodName').value,
+                category: document.getElementById('prodCategory').value,
+                desc: document.getElementById('prodDesc').value,
+                priceLocal: parseFloat(document.getElementById('prodPriceLocal').value),
+                priceDelivery: parseFloat(document.getElementById('prodPriceDelivery').value),
+                priceHalfLocal: parseFloat(document.getElementById('prodPriceHalfLocal').value) || 0,
+                priceHalfDelivery: parseFloat(document.getElementById('prodPriceHalfDelivery').value) || 0,
+                img: document.getElementById('prodImg').value || "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=500&q=80"
+            };
+            if (id) {
+                const idx = products.findIndex(p => p.id == id);
+                if (idx !== -1) products[idx] = pData;
+            } else { products.push(pData); }
+            localStorage.setItem('primavera_menu_v7', JSON.stringify(products));
+            renderProducts();
+            renderAdminProducts();
+            document.getElementById('productForm').reset();
+            document.getElementById('prodId').value = '';
+            alert("Guardado exitosamente.");
+        }
+        function renderAdminProducts() {
+            document.getElementById('adminProductsTable').innerHTML = products.map(p => `
+                <tr>
+                    <td>${p.name}</td><td>${p.category}</td><td>$${(p.priceLocal||0).toLocaleString()}</td><td>$${(p.priceDelivery||0).toLocaleString()}</td>
+                    <td><button onclick="editProduct(${p.id})">✏️</button> <button onclick="deleteProduct(${p.id})" style="color:red;">🗑️</button></td>
+                </tr>`).join('');
+        }
+        function editProduct(id) {
+            const p = products.find(prod => prod.id === id);
+            if (!p) return;
+            document.getElementById('prodId').value = p.id;
+            document.getElementById('prodName').value = p.name;
+            document.getElementById('prodCategory').value = p.category;
+            document.getElementById('prodDesc').value = p.desc;
+            document.getElementById('prodPriceLocal').value = p.priceLocal || 0;
+            document.getElementById('prodPriceDelivery').value = p.priceDelivery || 0;
+            document.getElementById('prodPriceHalfLocal').value = p.priceHalfLocal || 0;
+            document.getElementById('prodPriceHalfDelivery').value = p.priceHalfDelivery || 0;
+            document.getElementById('prodImg').value = p.img || '';
+        }
+        function deleteProduct(id) {
+            if (confirm("¿Eliminar?")) {
+                products = products.filter(p => p.id !== id);
+                localStorage.setItem('primavera_menu_v7', JSON.stringify(products));
+                renderProducts();
+                renderAdminProducts();
+            }
+        }
+        function renderAdminOrders() {
+            document.getElementById('adminOrdersTable').innerHTML = orderHistory.length ? [...orderHistory].reverse().map(o => `
+                <tr><td>${o.orderNum}</td><td>${o.date}</td><td>${o.client}<br><small>${o.phone}</small></td><td>${o.type}</td><td>${o.detail}</td><td>$${o.total.toLocaleString()}</td></tr>`).join('') : `<tr><td colspan="6" style="text-align:center;">No hay pedidos registrados.</td></tr>`;
+        }
+    </script>
+</body>
+</html>
